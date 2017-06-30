@@ -34,10 +34,8 @@ func newQuad(img *image.Image, x, y, width, height int, t float64, maxDepth int3
 		currDepth: currDepth,
 		maxDepth:  maxDepth,
 	}
-	// spew.Dump(q)
 	q.calcAvgColor()
 	q.calcAvgSimpleColorDistance()
-	// q.calcAvgEuclidianColorDistance()
 	q.subdivide()
 	return &q
 }
@@ -60,19 +58,6 @@ func (q *quad) calcAvgSimpleColorDistance() {
 	}
 
 	q.colorDelta = colorSum / float64(3*q.width*q.height)
-}
-
-func (q *quad) calcAvgEuclidianColorDistance() {
-	var runningDistance float64
-	for y := q.y; y < q.y+q.height; y++ {
-		for x := q.x; x < q.x+q.width; x++ {
-			r, g, b, _ := (*q.img).At(x, y).RGBA()
-			runningDistance += math.Sqrt(math.Pow(float64(int32(q.color.R)-int32(r)), 2) +
-				math.Pow(float64(int32(q.color.G)-int32(g)), 2) +
-				math.Pow(float64(int32(q.color.B)-int32(b)), 2))
-		}
-	}
-	q.colorDelta = runningDistance / float64(q.width*q.height)
 }
 
 func (q *quad) calcAvgColor() {
