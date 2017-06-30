@@ -126,10 +126,18 @@ func (q *quad) draw(c *image.RGBA) {
 	} else {
 		draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+q.height), &image.Uniform{q.color}, image.Point{q.x, q.y}, draw.Src)
 		if Outlines {
-			outlineColor := color.RGBA{0x99, 0x99, 0x99, 0xff}
-			draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{outlineColor}, image.Point{q.x, q.y}, draw.Src)
-			draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{outlineColor}, image.Point{q.x, q.y}, draw.Src)
+			// top
+			draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{LineColor}, image.Point{q.x, q.y}, draw.Src)
+			// left
+			draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{LineColor}, image.Point{q.x, q.y}, draw.Src)
 		}
+	}
+
+	if q.currDepth == 1 {
+		draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
+		draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
+		draw.Draw(c, image.Rect(q.x, q.y+q.height-1, q.x+q.width, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
+		draw.Draw(c, image.Rect(q.x+q.width-1, q.y, q.x+q.width, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
 	}
 
 }
