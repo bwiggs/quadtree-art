@@ -35,7 +35,7 @@ func init() {
 	flag.BoolVar(&Outlines, "outlines", true, "render block outlines")
 	flag.StringVar(&InputBorderColor, "bc", "333333", "border color (hex)")
 	flag.StringVar(&InputLineColor, "lc", "", "line color (hex)")
-	flag.StringVar(&oFile, "o", "art.jpg", "output file name with extension")
+	flag.StringVar(&oFile, "o", "art.png", "output file name with extension")
 	flag.Parse()
 }
 
