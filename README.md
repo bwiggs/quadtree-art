@@ -31,8 +31,8 @@ func (q *quad) calcAvgSimpleColorDistance() {
 
 	for y := q.y; y < q.y+q.height; y++ {
 		for x := q.x; x < q.x+q.width; x++ {
-      // use _ to ignore the alpha channel since we don't care about that
-      r, g, b, _ := (*q.img).At(x, y).RGBA()
+			// use _ to ignore the alpha channel since we don't care about that
+			r, g, b, _ := (*q.img).At(x, y).RGBA()
 			colorSum += math.Abs(float64(int32(q.color.R) - int32(r>>8)))
 			colorSum += math.Abs(float64(int32(q.color.G) - int32(g>>8)))
 			colorSum += math.Abs(float64(int32(q.color.B) - int32(b>>8)))
