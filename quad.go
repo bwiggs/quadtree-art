@@ -37,8 +37,18 @@ func newQuad(img *image.Image, x, y, width, height int, t float64, maxDepth int3
 
 	q.calcAvgColor()
 	q.calcAvgSimpleColorDistance()
-	q.subdivide()
+
+	if q.shouldSubdivide() {
+		q.subdivide()
+	}
+
 	return &q
+}
+
+func (q quad) shouldSubdivide() bool {
+	return q.colorDelta > q.threshold &&
+		q.width > PixelMin && q.height > PixelMin &&
+		(q.maxDepth == 0 || q.currDepth < q.maxDepth)
 }
 
 func (q quad) String() string {
@@ -89,16 +99,14 @@ func (q *quad) calcAvgColor() {
 }
 
 func (q *quad) subdivide() {
-	// spew.Dump(q)
-	if q.colorDelta > q.threshold && (q.maxDepth == 0 || q.currDepth < q.maxDepth) && q.width > PixelMin && q.height > PixelMin {
-		newWidth := int(math.Ceil(float64(q.width) / 2))
-		newHeight := int(math.Ceil(float64(q.height) / 2))
-		q.children = []*quad{
-			newQuad(q.img, q.x, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x+newWidth, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x+newWidth, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
-		}
+	newWidth := int(math.Ceil(float64(q.width) / 2))
+	newHeight := int(math.Ceil(float64(q.height) / 2))
+
+	q.children = []*quad{
+		newQuad(q.img, q.x, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+		newQuad(q.img, q.x+newWidth, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+		newQuad(q.img, q.x, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+		newQuad(q.img, q.x+newWidth, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
 	}
 }
 
@@ -110,9 +118,9 @@ func (q *quad) draw(c *image.RGBA) {
 	} else {
 		draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+q.height), &image.Uniform{q.color}, image.Point{q.x, q.y}, draw.Src)
 		if ShowGrid {
-			// top
+			// top line
 			draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{GridColor}, image.Point{q.x, q.y}, draw.Src)
-			// left
+			// left line
 			draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{GridColor}, image.Point{q.x, q.y}, draw.Src)
 		}
 	}

@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/hex"
 	"flag"
-	"fmt"
 	"image"
 	"image/color"
 	"image/jpeg"
@@ -40,7 +39,13 @@ func init() {
 }
 
 func main() {
-	fmt.Println("Quadtree Art generation with GoLang")
+
+	// f, err := os.Create("trace.out")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// trace.Start(f)
+	// defer trace.Stop()
 
 	// open the image to quadify
 	reader, err := os.Open(os.Args[len(os.Args)-1])
@@ -54,7 +59,6 @@ func main() {
 	}
 	bounds := img.Bounds()
 
-	fmt.Println("processing image")
 	q := newQuad(&img, bounds.Min.X, bounds.Min.Y, bounds.Max.X, bounds.Max.Y, Threshold, int32(Levels), 1)
 
 	// use the input color if available or the default color for borders.
@@ -75,7 +79,7 @@ func main() {
 		GridColor = q.color
 	}
 
-	fmt.Println("rendering artwork")
+	// fmt.Println("rendering artwork")
 	canvas := image.NewRGBA(image.Rect(0, 0, q.width, q.height))
 	q.draw(canvas)
 
