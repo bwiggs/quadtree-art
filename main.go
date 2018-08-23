@@ -19,23 +19,23 @@ var (
 	PixelMin         int
 	Threshold        float64
 	Levels           int
-	Outlines         bool
+	ShowGrid         bool
 	oFile            string
 	InputBorderColor string
-	InputLineColor   string
+	InputGridColor   string
 	BorderColor      color.RGBA
-	LineColor        color.RGBA
+	GridColor        color.RGBA
 	AverageColor     color.RGBA
 )
 
 func init() {
 	flag.IntVar(&PixelMin, "m", 1, "minimum size a block can be")
-	flag.Float64Var(&Threshold, "t", 25, "minimum size a block can be")
+	flag.Float64Var(&Threshold, "t", 25, "color difference threshold")
 	flag.IntVar(&Levels, "l", 7, "max recursive levels")
-	flag.BoolVar(&Outlines, "outlines", true, "render block outlines")
+	flag.BoolVar(&ShowGrid, "g", false, "render grid lines")
 	flag.StringVar(&InputBorderColor, "bc", "333333", "border color (hex)")
-	flag.StringVar(&InputLineColor, "lc", "", "line color (hex)")
-	flag.StringVar(&oFile, "o", "art.png", "output file name with extension")
+	flag.StringVar(&InputGridColor, "gc", "", "grid color (hex)")
+	flag.StringVar(&oFile, "o", "quad.png", "output file name with extension")
 	flag.Parse()
 }
 
@@ -69,12 +69,12 @@ func main() {
 	}
 
 	// use the input color if available or the default color for borders.
-	if len(InputLineColor) == 6 {
-		colorHex, _ := hex.DecodeString(InputLineColor)
-		LineColor = color.RGBA{uint8(colorHex[0]), uint8(colorHex[1]), uint8(colorHex[2]), 0xff}
+	if len(InputGridColor) == 6 {
+		colorHex, _ := hex.DecodeString(InputGridColor)
+		GridColor = color.RGBA{uint8(colorHex[0]), uint8(colorHex[1]), uint8(colorHex[2]), 0xff}
 	} else {
 		// use the average color of the image
-		LineColor = q.color
+		GridColor = q.color
 	}
 
 	fmt.Println("rendering artwork")

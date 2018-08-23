@@ -6,6 +6,8 @@ import (
 	"image/color"
 	"image/draw"
 	"math"
+
+	"github.com/labstack/gommon/log"
 )
 
 type histogram struct {
@@ -34,6 +36,7 @@ func newQuad(img *image.Image, x, y, width, height int, t float64, maxDepth int3
 		currDepth: currDepth,
 		maxDepth:  maxDepth,
 	}
+	log.Debug(q)
 	q.calcAvgColor()
 	q.calcAvgSimpleColorDistance()
 	q.subdivide()
@@ -41,7 +44,7 @@ func newQuad(img *image.Image, x, y, width, height int, t float64, maxDepth int3
 }
 
 func (q quad) String() string {
-	return fmt.Sprintf("<%3d,%3d> %3dx%3d D:%d Δ:%9f T:%d %x", q.x, q.y, q.width, q.height, q.currDepth, q.colorDelta, int(q.threshold), q.color)
+	return fmt.Sprintf("<%4d,%4d> %4dx%4d D:%d Δ:%9f T:%d %x", q.x, q.y, q.width, q.height, q.currDepth, q.colorDelta, int(q.threshold), q.color)
 }
 
 func (q *quad) calcAvgSimpleColorDistance() {
@@ -112,19 +115,19 @@ func (q *quad) draw(c *image.RGBA) {
 		}
 	} else {
 		draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+q.height), &image.Uniform{q.color}, image.Point{q.x, q.y}, draw.Src)
-		if Outlines {
+		if ShowGrid {
 			// top
-			draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{LineColor}, image.Point{q.x, q.y}, draw.Src)
+			draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{GridColor}, image.Point{q.x, q.y}, draw.Src)
 			// left
-			draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{LineColor}, image.Point{q.x, q.y}, draw.Src)
+			draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{GridColor}, image.Point{q.x, q.y}, draw.Src)
 		}
 	}
 
+	// draws the border color
 	if q.currDepth == 1 {
 		draw.Draw(c, image.Rect(q.x, q.y, q.x+q.width, q.y+1), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
 		draw.Draw(c, image.Rect(q.x, q.y, q.x+1, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
 		draw.Draw(c, image.Rect(q.x, q.y+q.height-1, q.x+q.width, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
 		draw.Draw(c, image.Rect(q.x+q.width-1, q.y, q.x+q.width, q.y+q.height), &image.Uniform{BorderColor}, image.Point{q.x, q.y}, draw.Src)
 	}
-
 }
