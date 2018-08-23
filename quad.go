@@ -101,10 +101,6 @@ func (q *quad) subdivide() {
 			newQuad(q.img, q.x, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
 			newQuad(q.img, q.x+newWidth, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
 		}
-
-		for i := range q.children {
-			q.children[i].subdivide()
-		}
 	}
 }
 
