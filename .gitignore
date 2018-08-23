@@ -1,3 +1,5 @@
 images/
 gallery/
-art.*
+quad.png
+quadtree-art
+vendor/
