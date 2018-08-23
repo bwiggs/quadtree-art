@@ -90,11 +90,13 @@ func (q *quad) calcAvgColor() {
 func (q *quad) subdivide() {
 	// spew.Dump(q)
 	if q.colorDelta > q.threshold && (q.maxDepth == 0 || q.currDepth < q.maxDepth) && q.width > PixelMin && q.height > PixelMin {
+		newWidth := int(math.Ceil(float64(q.width) / 2))
+		newHeight := int(math.Ceil(float64(q.height) / 2))
 		q.children = []*quad{
-			newQuad(q.img, q.x, q.y, q.width/2, q.height/2, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x+q.width/2, q.y, q.width/2, q.height/2, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x, q.y+q.height/2, q.width/2, q.height/2, q.threshold, q.maxDepth, q.currDepth+1),
-			newQuad(q.img, q.x+q.width/2, q.y+q.height/2, q.width/2, q.height/2, q.threshold, q.maxDepth, q.currDepth+1),
+			newQuad(q.img, q.x, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+			newQuad(q.img, q.x+newWidth, q.y, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+			newQuad(q.img, q.x, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
+			newQuad(q.img, q.x+newWidth, q.y+newHeight, newWidth, newHeight, q.threshold, q.maxDepth, q.currDepth+1),
 		}
 
 		for i := range q.children {
