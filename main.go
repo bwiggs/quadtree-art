@@ -54,8 +54,6 @@ func main() {
 	}
 	bounds := img.Bounds()
 
-	// process the image
-
 	fmt.Println("processing image")
 	q := newQuad(&img, bounds.Min.X, bounds.Min.Y, bounds.Max.X, bounds.Max.Y, Threshold, int32(Levels), 1)
 

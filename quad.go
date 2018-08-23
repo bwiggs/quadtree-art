@@ -6,8 +6,6 @@ import (
 	"image/color"
 	"image/draw"
 	"math"
-
-	"github.com/labstack/gommon/log"
 )
 
 type histogram struct {
@@ -36,7 +34,7 @@ func newQuad(img *image.Image, x, y, width, height int, t float64, maxDepth int3
 		currDepth: currDepth,
 		maxDepth:  maxDepth,
 	}
-	log.Debug(q)
+
 	q.calcAvgColor()
 	q.calcAvgSimpleColorDistance()
 	q.subdivide()
